@@ -5,6 +5,17 @@ import FormButton from "@/app/create-account/components/form-button";
 import SocialLogin from "@/app/create-account/components/social-login";
 
 export default function Login() {
+  const onClick = async () => {
+    const response = await fetch('/api/users', {
+      method: 'POST',
+      body: JSON.stringify({
+        username: 'nico',
+        password: '1234',
+      })
+    })
+    console.log(await response.json())
+  }
+
   return (
     <div className="flex flex-col gap-10 py-8 px-6">
       <div className="flex flex-col gap-2 *:font-medium">
@@ -15,7 +26,9 @@ export default function Login() {
         <FormInput type="email" placeholder="Email" required errors={[]} />
         <FormInput type="password" placeholder="Password" required errors={[]} />
       </form>
-      <FormButton text="Log in" loading={false} />
+      <span onClick={onClick}>
+        <FormButton text="Log in" loading={false} />
+      </span>
       <SocialLogin />
     </div>
   )

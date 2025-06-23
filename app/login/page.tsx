@@ -6,8 +6,9 @@ export default function Login() {
   const handleForm = async (formData: FormData) => {
     'use server';
 
-    console.log(formData.get('email'), formData.get('password'))
-    console.log('i run in the server!')
+    console.log(formData)
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+    console.log('Logged in!')
   }
 
   return (
@@ -19,7 +20,7 @@ export default function Login() {
       <form action={handleForm} className="flex flex-col gap-3">
         <FormInput name="email" type="email" placeholder="Email" required errors={[]} />
         <FormInput name="password" type="password" placeholder="Password" required errors={[]} />
-        <FormButton text="Log in" loading={false} />
+        <FormButton text="Log in" />
       </form>
       <SocialLogin />
     </div>

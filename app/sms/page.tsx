@@ -1,5 +1,5 @@
-import FormInput from "@/app/create-account/components/form-input";
-import FormButton from "@/app/create-account/components/form-button";
+import FormInput from "@/components/form-input";
+import FormButton from "@/components/form-button";
 
 export default function SMSLogin() {
   return (

@@ -18,7 +18,6 @@ export async function smsLogin(prevState: ActionState, formData: FormData) {
   if(!prevState.token) {
     const result = phoneSchema.safeParse(phone)
     if(!result.success) {
-      console.log(result.error.flatten())
       return {
         token: false,
         error: result.error.flatten()

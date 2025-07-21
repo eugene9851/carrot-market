@@ -4,6 +4,9 @@ import { PASSWORD_MIN_LENGTH } from "@/lib/constants";
 import { z } from "zod";
 import db from "@/lib/db";
 import bcrypt from "bcrypt";
+import { getIronSession } from "iron-session";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 const checkUsername = (username:string) => !username.includes('potato')
 const checkPasswords = ({password, passwordConfirm}:{password:string, passwordConfirm:string}) => password === passwordConfirm
@@ -72,7 +75,14 @@ export async function createAccount(prevState:unknown, formData:FormData) {
         id: true,
       }
     })
-    // log the user in
-    // redirect '/home'
+
+    const cookie = await getIronSession(await cookies(), {
+      cookieName: 'delicious-karrot',
+      password: process.env.COOKIE_PASSWORD!,
+    });
+    cookie.id = user.id;
+    await cookie.save();
+
+    redirect('/profile')
   }
 }

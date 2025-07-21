@@ -3,6 +3,7 @@
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants";
 import { z } from "zod";
 import db from "@/lib/db";
+import bcrypt from "bcrypt";
 
 const checkUsername = (username:string) => !username.includes('potato')
 const checkPasswords = ({password, passwordConfirm}:{password:string, passwordConfirm:string}) => password === passwordConfirm
@@ -60,10 +61,17 @@ export async function createAccount(prevState:unknown, formData:FormData) {
   if(!result.success) {
     return result.error.flatten();
   } else {
-    // check if username is already used
-    // check if email is already used
-    // hash password
-    // save the user to db
+    const hashedPassword = await bcrypt.hash(result.data.password, 12)
+    const user = await db.user.create({
+      data: {
+        username: result.data.username,
+        email: result.data.email,
+        password: hashedPassword,
+      },
+      select: {
+        id: true,
+      }
+    })
     // log the user in
     // redirect '/home'
   }

@@ -23,7 +23,27 @@ async function test() {
   //     token: '222222',
   //     user: {
   //       connect: {
-  //         id: 3,
+  //         id: 2,
+  //       }
+  //     }
+  //   }
+  // })
+  // const token = await db.sMSToken.create({
+  //   data: {
+  //     token: '444444',
+  //     user: {
+  //       connect: {
+  //         id: 4,
+  //       }
+  //     }
+  //   }
+  // })
+  // const token5 = await db.sMSToken.create({
+  //   data: {
+  //     token: '555555',
+  //     user: {
+  //       connect: {
+  //         id: 5,
   //       }
   //     }
   //   }
@@ -31,14 +51,17 @@ async function test() {
 
   // console.log(token);
 
-  const token = await db.sMSToken.findUnique({
-    where: {
-      id: 1
-    }
-  })
+  // const token = await db.sMSToken.findUnique({
+  //   where: {
+  //     id: 1
+  //   }
+  // })
 
-  console.log(token);
-
+  // console.log(token);
+  // const updateUser = await db.user.update({
+  //   where: { id: 4 },
+  //   data: { email: 'nico@nomad.co' }
+  // })
 }
 
 test();

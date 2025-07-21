@@ -1,18 +1,46 @@
 'use server'
 
-import { PASSWORD_MIN_LENGTH, PASSWORD_REGEX, PASSWORD_REGEX_ERROR } from "@/lib/constants";
+import { PASSWORD_MIN_LENGTH } from "@/lib/constants";
 import { z } from "zod";
+import db from "@/lib/db";
 
 const checkUsername = (username:string) => !username.includes('potato')
 const checkPasswords = ({password, passwordConfirm}:{password:string, passwordConfirm:string}) => password === passwordConfirm
+
+const checkUniqueUsername = async (username:string) => {
+  const user = await db.user.findUnique({
+    where: {
+      username,
+    },
+    select: {
+      id: true,
+    }
+  });
+
+  return !Boolean(user);
+}
+
+const checkUniqueEmail = async (email:string) => {
+  const user = await db.user.findUnique({
+    where: {
+      email,
+    },
+    select: {
+      id: true,
+    }
+  });
+
+  return !Boolean(user);
+}
 
 const formSchema = z.object({
   username: z.string({
     invalid_type_error: 'Username must be a string',
     required_error: 'Where is my username?'
-  }).min(3, 'way too short!').max(10, 'way too long!').toLowerCase().trim().transform((username) => `kkk ${username}`).refine(checkUsername, 'No potatoes!'),
-  email: z.string().email().toLowerCase(),
-  password: z.string().min(PASSWORD_MIN_LENGTH).regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
+  }).min(3, 'way too short!').max(10, 'way too long!').toLowerCase().trim().refine(checkUsername, 'No potatoes!').refine(checkUniqueUsername, 'This username is already taken'),
+  email: z.string().email().toLowerCase().refine(checkUniqueEmail, 'There is an account already registered with that email'),
+  // password: z.string().min(PASSWORD_MIN_LENGTH).regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
+  password: z.string().min(PASSWORD_MIN_LENGTH),
   passwordConfirm: z.string().min(PASSWORD_MIN_LENGTH),
 }).refine(checkPasswords, {
   message: 'Both passwords should be the same',
@@ -27,11 +55,16 @@ export async function createAccount(prevState:unknown, formData:FormData) {
     passwordConfirm: formData.get('passwordConfirm'),
   }
 
-  const result = formSchema.safeParse(data);
+  const result = await formSchema.safeParseAsync(data);
 
   if(!result.success) {
     return result.error.flatten();
   } else {
-    console.log(result.data)
+    // check if username is already used
+    // check if email is already used
+    // hash password
+    // save the user to db
+    // log the user in
+    // redirect '/home'
   }
 }

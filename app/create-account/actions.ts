@@ -4,8 +4,7 @@ import { PASSWORD_MIN_LENGTH } from "@/lib/constants";
 import { z } from "zod";
 import db from "@/lib/db";
 import bcrypt from "bcrypt";
-import { redirect } from "next/navigation";
-import getSession from "@/lib/session";
+import { setSession } from "@/lib/session";
 
 const checkUsername = (username:string) => !username.includes('potato')
 const checkPasswords = ({password, passwordConfirm}:{password:string, passwordConfirm:string}) => password === passwordConfirm
@@ -86,10 +85,6 @@ export async function createAccount(prevState:unknown, formData:FormData) {
       }
     })
 
-    const session = await getSession();
-    session.id = user.id;
-    await session.save();
-
-    redirect('/profile')
+    await setSession(user.id);
   }
 }

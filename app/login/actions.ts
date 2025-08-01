@@ -5,8 +5,7 @@ import { PASSWORD_REGEX } from "@/lib/constants"
 import { z } from "zod"
 import db from "@/lib/db"
 import bcrypt from "bcrypt";
-import getSession from "@/lib/session"
-import { redirect } from "next/navigation"
+import { setSession } from "@/lib/session"
 
 const checkEmailExists = async (email: string) => {
   const user = await db.user.findUnique({
@@ -49,10 +48,7 @@ export default async function login(prevState: unknown, formData: FormData) {
     })
     const ok = await bcrypt.compare(result.data.password, user!.password ?? '')
     if (ok) {
-      const session = await getSession();
-      session.id = user!.id;
-      await session.save();
-      redirect('/profile');
+      return await setSession(user!.id);
     } else {
       return {
         fieldErrors: {

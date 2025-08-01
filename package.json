@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@prisma/client": "^6.11.1",
     "@types/bcrypt": "^6.0.0",
     "bcrypt": "^6.0.0",
     "iron-session": "^8.0.4",
